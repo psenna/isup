@@ -2,7 +2,8 @@ package models
 
 // System A system that is monitored
 type System struct {
-	Name     string
-	Group    string
-	Priority uint
+	Name     string `json:"name"`
+	Group    string `json:"group"`
+	Priority uint   `json:"priority"`
+	Tests    []Test `json:"tests"`
 }
