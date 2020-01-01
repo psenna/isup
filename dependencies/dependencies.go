@@ -19,11 +19,21 @@ func (d Dependencies) GetMainDbConection() *gorm.DB {
 }
 
 // InitDependencies Init the app dependencies
-func InitDependencies() {
+func InitDependencies() error {
 	AppDependencies = Dependencies{}
+	var err error
+	AppDependencies.configs, err = models.CreateConfig("{}")
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // CloseDependencies Close de initied dependencies
-func CloseDependencies() {
+func CloseDependencies() error {
 	AppDependencies.databases.Close()
+
+	return nil
 }

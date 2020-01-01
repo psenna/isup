@@ -14,11 +14,11 @@ func TestConfigInitialization(t *testing.T) {
 		config     models.Config
 		err        error
 	}{
-		{"{}", models.Config{DatabaseType: "sqlite", DatabaseURL: "./Config/gorm.db"}, errors.New("At least one configured system required")},
-		{"{}", models.Config{DatabaseType: "sqlite", DatabaseURL: "./Config/gorm.db"}, errors.New("At least one configured system required")},
-		{"{\"database_type\":\"postgres\"}", models.Config{DatabaseType: "postgres", DatabaseURL: "./Config/gorm.db"}, errors.New("At least one configured system required")},
-		{"{\"database_url:\"localhost:6154\"}", models.Config{DatabaseType: "sqlite", DatabaseURL: "./Config/gorm.db"}, errors.New("Invalid json")},
-		{"{\"systems\":[{\"name\":\"sis1\"}]}", models.Config{DatabaseType: "sqlite", DatabaseURL: "./Config/gorm.db", Systems: []models.System{models.System{Name: "sis1"}}}, nil},
+		{"{}", models.Config{DatabaseType: "sqlite3", DatabaseURL: "./config/gorm.db"}, errors.New("At least one configured system required")},
+		{"{}", models.Config{DatabaseType: "sqlite3", DatabaseURL: "./config/gorm.db"}, errors.New("At least one configured system required")},
+		{"{\"database_type\":\"postgres\"}", models.Config{DatabaseType: "postgres", DatabaseURL: "./config/gorm.db"}, errors.New("At least one configured system required")},
+		{"{\"database_url:\"localhost:6154\"}", models.Config{DatabaseType: "sqlite3", DatabaseURL: "./config/gorm.db"}, errors.New("Invalid json")},
+		{"{\"systems\":[{\"name\":\"sis1\"}]}", models.Config{DatabaseType: "sqlite3", DatabaseURL: "./config/gorm.db", Systems: []models.System{models.System{Name: "sis1"}}}, nil},
 	}
 
 	for _, test := range tests {
@@ -42,8 +42,8 @@ func TestConfigGetDatabaseConnection(t *testing.T) {
 		databaseType string
 		databaseURL  string
 	}{
-		{models.Config{DatabaseType: "sqlite", DatabaseURL: "./Config/gorm.db"}, "sqlite", "./Config/gorm.db"},
-		{models.Config{DatabaseType: "postgres", DatabaseURL: "./Config/gorm.db"}, "postgres", "./Config/gorm.db"},
+		{models.Config{DatabaseType: "sqlite", DatabaseURL: "./config/gorm.db"}, "sqlite", "./config/gorm.db"},
+		{models.Config{DatabaseType: "postgres", DatabaseURL: "./config/gorm.db"}, "postgres", "./config/gorm.db"},
 		{models.Config{DatabaseType: "sqlite", DatabaseURL: "localhost:6565"}, "sqlite", "localhost:6565"},
 	}
 

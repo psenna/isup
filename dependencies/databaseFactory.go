@@ -35,7 +35,7 @@ func (d DatabaseFactory) createMainDatabaseConnection() (*gorm.DB, error) {
 }
 
 func (d DatabaseFactory) createDatabaseConnection(dbType string, url string) (*gorm.DB, error) {
-	return gorm.Open("dbType", "url")
+	return gorm.Open(dbType, url)
 }
 
 // Close Close the databases connections

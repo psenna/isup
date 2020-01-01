@@ -1,15 +1,17 @@
 package main
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/psenna/isup/api"
+	"github.com/psenna/isup/dependencies"
+)
 
 func main() {
-	server := gin.Default()
 
-	server.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
-	})
+	dependencies.InitDependencies()
+
+	defer dependencies.CloseDependencies()
+
+	server := api.GetApiServer()
 
 	server.Run("0.0.0.0:8080")
 }

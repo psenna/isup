@@ -23,8 +23,8 @@ func (c Config) Validate() error {
 // CreateConfig Create a config object
 func CreateConfig(jsonConfigs string) (Config, error) {
 	configuration := Config{
-		DatabaseType: "sqlite",
-		DatabaseURL:  "./Config/gorm.db",
+		DatabaseType: "sqlite3",
+		DatabaseURL:  "./config/gorm.db",
 	}
 
 	err := json.Unmarshal([]byte(jsonConfigs), &configuration)
