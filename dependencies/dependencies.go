@@ -1,8 +1,9 @@
 package dependencies
 
-import "github.com/jinzhu/gorm"
-
-import "github.com/psenna/isup/models"
+import (
+	"github.com/jinzhu/gorm"
+	"github.com/psenna/isup/models"
+)
 
 // AppDependencies Export the app dependencies (db, http client, ...) to all packages
 var AppDependencies Dependencies
@@ -31,9 +32,8 @@ func InitDependencies() error {
 	return nil
 }
 
-// CloseDependencies Close de initied dependencies
+// CloseDependencies Close the initied dependencies
 func CloseDependencies() error {
 	AppDependencies.databases.Close()
-
 	return nil
 }

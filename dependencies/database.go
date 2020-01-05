@@ -40,5 +40,7 @@ func (d DatabaseFactory) createDatabaseConnection(dbType string, url string) (*g
 
 // Close Close the databases connections
 func (d *DatabaseFactory) Close() {
-	d.mainConnection.Close()
+	if d.mainConnection != nil {
+		d.mainConnection.Close()
+	}
 }
