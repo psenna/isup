@@ -1,24 +1,34 @@
 package dependencies
 
-// HTTPResponse A response from a http call
-type HTTPResponse struct {
-	URL           string
-	RequestMethod string
-	StatusCode    int
-	Body          string
-	ResponseTime  float64
-	ContentLength int64
-	ContentType   string
-}
-
-// ClientFactory ClientFactory
-type ClientFactory struct {
+// HTTPClient HTTPClient
+type HTTPClient struct {
 	mockEnable   bool
 	mockResponse map[string]HTTPResponse
 }
 
+// HTTPCall Make a http call
+func (c HTTPClient) HTTPCall(request HTTPRequest) HTTPResponse {
+	if c.mockEnable {
+		return c.GetMockResponse(request.Method, request.URL)
+	}
+
+	response := HTTPResponse{}
+
+	switch request.Method {
+	case "GET":
+		response = c.httpGet(request)
+	}
+
+	return response
+}
+
+// todo: implementar
+func (c HTTPClient) httpGet(request HTTPRequest) HTTPResponse {
+	return HTTPResponse{}
+}
+
 // AddMockResponse Add a mock response for a api call
-func (c *ClientFactory) AddMockResponse(expectedResponse HTTPResponse, apiMethod string, apiURL string) {
+func (c *HTTPClient) AddMockResponse(expectedResponse HTTPResponse, apiMethod string, apiURL string) {
 	if c.mockResponse == nil {
 		c.mockResponse = make(map[string]HTTPResponse)
 	}
@@ -27,7 +37,7 @@ func (c *ClientFactory) AddMockResponse(expectedResponse HTTPResponse, apiMethod
 }
 
 // GetMockResponse Get a mock response for a api call
-func (c *ClientFactory) GetMockResponse(apiMethod string, apiURL string) HTTPResponse {
+func (c *HTTPClient) GetMockResponse(apiMethod string, apiURL string) HTTPResponse {
 	if c.mockResponse == nil {
 		return HTTPResponse{RequestMethod: apiMethod, URL: apiURL, StatusCode: 404}
 	}
@@ -40,6 +50,6 @@ func (c *ClientFactory) GetMockResponse(apiMethod string, apiURL string) HTTPRes
 }
 
 // SetMockEnable Enable or disable mock api call
-func (c *ClientFactory) SetMockEnable(enable bool) {
+func (c *HTTPClient) SetMockEnable(enable bool) {
 	c.mockEnable = enable
 }

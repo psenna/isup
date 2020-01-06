@@ -10,7 +10,7 @@ var AppDependencies Dependencies
 
 // Dependencies Store the dependencies
 type Dependencies struct {
-	databases DatabaseFactory
+	databases Database
 	configs   models.Config
 }
 

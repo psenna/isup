@@ -11,13 +11,13 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
 
-// DatabaseFactory Create database conections
-type DatabaseFactory struct {
+// Database Create database conections
+type Database struct {
 	mainConnection *gorm.DB
 }
 
 // GetMainDataseConnection Get main app db connection
-func (d *DatabaseFactory) GetMainDataseConnection() *gorm.DB {
+func (d *Database) GetMainDataseConnection() *gorm.DB {
 	if d.mainConnection == nil {
 		db, err := d.createMainDatabaseConnection()
 		if err == nil {
@@ -30,16 +30,16 @@ func (d *DatabaseFactory) GetMainDataseConnection() *gorm.DB {
 	return d.mainConnection
 }
 
-func (d DatabaseFactory) createMainDatabaseConnection() (*gorm.DB, error) {
+func (d Database) createMainDatabaseConnection() (*gorm.DB, error) {
 	return d.createDatabaseConnection(AppDependencies.configs.GetDatabaseConnection())
 }
 
-func (d DatabaseFactory) createDatabaseConnection(dbType string, url string) (*gorm.DB, error) {
+func (d Database) createDatabaseConnection(dbType string, url string) (*gorm.DB, error) {
 	return gorm.Open(dbType, url)
 }
 
 // Close Close the databases connections
-func (d *DatabaseFactory) Close() {
+func (d *Database) Close() {
 	if d.mainConnection != nil {
 		d.mainConnection.Close()
 	}
