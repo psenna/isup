@@ -14,17 +14,17 @@ func TestGetMockResponse(t *testing.T) {
 		apiMethod        string
 		apiURL           string
 	}{
-		{dependencies.HTTPResponse{}, dependencies.HTTPResponse{RequestMethod: "GET", URL: "localhost:8080/api", StatusCode: 404}, "GET", "localhost:8080/api"},
-		{dependencies.HTTPResponse{RequestMethod: "POST", URL: "localhost:8080/api", StatusCode: 200}, dependencies.HTTPResponse{RequestMethod: "GET", URL: "localhost:8080/api", StatusCode: 404}, "GET", "localhost:8080/api"},
-		{dependencies.HTTPResponse{RequestMethod: "GET", URL: "localhost:8080/v2/api", StatusCode: 200}, dependencies.HTTPResponse{RequestMethod: "GET", URL: "localhost:8080/api", StatusCode: 404}, "GET", "localhost:8080/api"},
-		{dependencies.HTTPResponse{RequestMethod: "GET", URL: "localhost:8080/api", StatusCode: 200}, dependencies.HTTPResponse{RequestMethod: "GET", URL: "localhost:8080/api", StatusCode: 200}, "GET", "localhost:8080/api"},
+		{dependencies.HTTPResponse{}, dependencies.HTTPResponse{Method: "GET", URL: "localhost:8080/api", StatusCode: 404}, "GET", "localhost:8080/api"},
+		{dependencies.HTTPResponse{Method: "POST", URL: "localhost:8080/api", StatusCode: 200}, dependencies.HTTPResponse{Method: "GET", URL: "localhost:8080/api", StatusCode: 404}, "GET", "localhost:8080/api"},
+		{dependencies.HTTPResponse{Method: "GET", URL: "localhost:8080/v2/api", StatusCode: 200}, dependencies.HTTPResponse{Method: "GET", URL: "localhost:8080/api", StatusCode: 404}, "GET", "localhost:8080/api"},
+		{dependencies.HTTPResponse{Method: "GET", URL: "localhost:8080/api", StatusCode: 200}, dependencies.HTTPResponse{Method: "GET", URL: "localhost:8080/api", StatusCode: 200}, "GET", "localhost:8080/api"},
 	}
 
 	for _, test := range tests {
 		HTTPClient := dependencies.HTTPClient{}
 
 		if test.setResponse.URL != "" {
-			HTTPClient.AddMockResponse(test.setResponse, test.setResponse.RequestMethod, test.setResponse.URL)
+			HTTPClient.AddMockResponse(test.setResponse, test.setResponse.Method, test.setResponse.URL)
 		}
 
 		resultResponse := HTTPClient.GetMockResponse(test.apiMethod, test.apiURL)
@@ -41,10 +41,10 @@ func TestGetResponseMockEnable(t *testing.T) {
 		apiMethod        string
 		apiURL           string
 	}{
-		{dependencies.HTTPResponse{}, dependencies.HTTPResponse{RequestMethod: "GET", URL: "localhost:8080/api", StatusCode: 404}, "GET", "localhost:8080/api"},
-		{dependencies.HTTPResponse{RequestMethod: "POST", URL: "localhost:8080/api", StatusCode: 200}, dependencies.HTTPResponse{RequestMethod: "GET", URL: "localhost:8080/api", StatusCode: 404}, "GET", "localhost:8080/api"},
-		{dependencies.HTTPResponse{RequestMethod: "GET", URL: "localhost:8080/v2/api", StatusCode: 200}, dependencies.HTTPResponse{RequestMethod: "GET", URL: "localhost:8080/api", StatusCode: 404}, "GET", "localhost:8080/api"},
-		{dependencies.HTTPResponse{RequestMethod: "GET", URL: "localhost:8080/api", StatusCode: 200}, dependencies.HTTPResponse{RequestMethod: "GET", URL: "localhost:8080/api", StatusCode: 200}, "GET", "localhost:8080/api"},
+		{dependencies.HTTPResponse{}, dependencies.HTTPResponse{Method: "GET", URL: "localhost:8080/api", StatusCode: 404}, "GET", "localhost:8080/api"},
+		{dependencies.HTTPResponse{Method: "POST", URL: "localhost:8080/api", StatusCode: 200}, dependencies.HTTPResponse{Method: "GET", URL: "localhost:8080/api", StatusCode: 404}, "GET", "localhost:8080/api"},
+		{dependencies.HTTPResponse{Method: "GET", URL: "localhost:8080/v2/api", StatusCode: 200}, dependencies.HTTPResponse{Method: "GET", URL: "localhost:8080/api", StatusCode: 404}, "GET", "localhost:8080/api"},
+		{dependencies.HTTPResponse{Method: "GET", URL: "localhost:8080/api", StatusCode: 200}, dependencies.HTTPResponse{Method: "GET", URL: "localhost:8080/api", StatusCode: 200}, "GET", "localhost:8080/api"},
 	}
 
 	for _, test := range tests {
@@ -52,11 +52,22 @@ func TestGetResponseMockEnable(t *testing.T) {
 		HTTPClient.SetMockEnable(true)
 
 		if test.setResponse.URL != "" {
-			HTTPClient.AddMockResponse(test.setResponse, test.setResponse.RequestMethod, test.setResponse.URL)
+			HTTPClient.AddMockResponse(test.setResponse, test.setResponse.Method, test.setResponse.URL)
 		}
 
-		resultResponse := HTTPClient.HTTPCall(dependencies.HTTPRequest{Method: test.apiMethod, URL: test.apiURL})
+		resultResponse := HTTPClient.HTTPCall(dependencies.GetHTTPRequest(test.apiMethod, test.apiURL))
 
 		assert.True(t, assert.ObjectsAreEqualValues(test.expectedResponse, resultResponse), "The response object are different from the expected response")
 	}
+}
+
+// Get response from a api
+func TestGetResponseFromApi(t *testing.T) {
+	HTTPClient := dependencies.HTTPClient{}
+
+	httpRequest := dependencies.GetHTTPRequest("GET", "https://google.com.br")
+
+	response := HTTPClient.HTTPCall(httpRequest)
+
+	assert.Equal(t, 200, response.StatusCode)
 }

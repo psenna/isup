@@ -1,5 +1,12 @@
 package dependencies
 
+import (
+	"crypto/tls"
+	"fmt"
+	"net/http"
+	"time"
+)
+
 // HTTPClient HTTPClient
 type HTTPClient struct {
 	mockEnable   bool
@@ -9,22 +16,56 @@ type HTTPClient struct {
 // HTTPCall Make a http call
 func (c HTTPClient) HTTPCall(request HTTPRequest) HTTPResponse {
 	if c.mockEnable {
-		return c.GetMockResponse(request.Method, request.URL)
+		return c.GetMockResponse(request.method, request.url)
 	}
 
-	response := HTTPResponse{}
-
-	switch request.Method {
-	case "GET":
-		response = c.httpGet(request)
-	}
-
-	return response
+	return c.httpRequest(request)
 }
 
-// todo: implementar
-func (c HTTPClient) httpGet(request HTTPRequest) HTTPResponse {
-	return HTTPResponse{}
+func (c HTTPClient) httpRequest(request HTTPRequest) HTTPResponse {
+
+	// request configuration
+	goRequest, err := request.ToGoHTTPRequest()
+
+	if err != nil {
+		fmt.Println(err)
+		// todo Err handler
+		return HTTPResponse{StatusCode: 0}
+	}
+
+	// Make request
+	start := time.Now()
+
+	response, err := c.getHTTPClient(request).Do(goRequest)
+
+	elapsed := time.Since(start)
+
+	if err != nil {
+		fmt.Println(err)
+		// todo Err handler
+		return HTTPResponse{}
+	}
+
+	defer response.Body.Close()
+
+	// Process response
+
+	returnresponse := GetHTTPResponse(response)
+
+	returnresponse.ResponseTime = float64(elapsed.Nanoseconds() / 1000000.0)
+
+	return returnresponse
+}
+
+func (c HTTPClient) getHTTPClient(request HTTPRequest) *http.Client {
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: request.GetInsecureRequest()},
+	}
+
+	return &http.Client{
+		Transport: tr,
+		Timeout:   time.Duration(request.GetTimeOut()) * time.Millisecond,
+	}
 }
 
 // AddMockResponse Add a mock response for a api call
@@ -39,11 +80,11 @@ func (c *HTTPClient) AddMockResponse(expectedResponse HTTPResponse, apiMethod st
 // GetMockResponse Get a mock response for a api call
 func (c *HTTPClient) GetMockResponse(apiMethod string, apiURL string) HTTPResponse {
 	if c.mockResponse == nil {
-		return HTTPResponse{RequestMethod: apiMethod, URL: apiURL, StatusCode: 404}
+		return HTTPResponse{Method: apiMethod, URL: apiURL, StatusCode: 404}
 	}
 
 	if _, ok := c.mockResponse[apiMethod+"-"+apiURL]; !ok {
-		return HTTPResponse{RequestMethod: apiMethod, URL: apiURL, StatusCode: 404}
+		return HTTPResponse{Method: apiMethod, URL: apiURL, StatusCode: 404}
 	}
 
 	return c.mockResponse[apiMethod+"-"+apiURL]
