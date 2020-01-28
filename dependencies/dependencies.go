@@ -2,7 +2,6 @@ package dependencies
 
 import (
 	"github.com/jinzhu/gorm"
-	"github.com/psenna/isup/models"
 )
 
 // AppDependencies Export the app dependencies (db, http client, ...) to all packages
@@ -11,7 +10,7 @@ var AppDependencies Dependencies
 // Dependencies Store the dependencies
 type Dependencies struct {
 	databases Database
-	configs   models.Config
+	configs   Configurations
 }
 
 // GetMainDbConection Get the application database main conection
@@ -20,10 +19,10 @@ func (d Dependencies) GetMainDbConection() *gorm.DB {
 }
 
 // InitDependencies Init the app dependencies
-func InitDependencies() error {
+func InitDependencies(configurations Configurations) error {
 	AppDependencies = Dependencies{}
 	var err error
-	AppDependencies.configs, err = models.CreateConfig("{}")
+	AppDependencies.configs = configurations
 
 	if err != nil {
 		return err

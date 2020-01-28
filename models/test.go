@@ -1,10 +1,53 @@
 package models
 
+import "time"
+
 // Test A test in a system
 type Test struct {
 	TestType       string                 `json:"test_type"`
 	URL            string                 `json:"url"`
 	Headers        map[string]interface{} `json:"headers"`
 	FormParameters map[string]interface{} `json:"form_parameters"`
-	Alerts         []*Alert               `json:"alerts"`
+	Interval       int                    `json:"interval"`
+	Name           string                 `json:"name"`
+	System         string
+	LastRun        time.Time
+	Valid          bool
+}
+
+// Initiate Initiate a Test struct
+func (t *Test) Initiate(sysName string) {
+	t.System = sysName
+	if t.Interval < 0 {
+		t.Interval = 60
+	}
+
+	t.Validate()
+}
+
+// Validate Validate
+func (t *Test) Validate() (problems string) {
+	t.Valid = true
+
+	if t.Name == "" {
+		problems += "A test must have a name\n"
+		t.Valid = false
+	}
+
+	if t.TestType == "" {
+		problems += "A test must have a type\n"
+		t.Valid = false
+	}
+
+	if t.URL == "" {
+		problems += "A test must have a url\n"
+		t.Valid = false
+	}
+
+	if t.System == "" {
+		problems += "A test must have a system\n"
+		t.Valid = false
+	}
+
+	return
 }

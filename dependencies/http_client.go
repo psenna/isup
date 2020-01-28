@@ -29,7 +29,6 @@ func (c HTTPClient) httpRequest(request HTTPRequest) HTTPResponse {
 
 	if err != nil {
 		fmt.Println(err)
-		// todo Err handler
 		return HTTPResponse{StatusCode: 0}
 	}
 

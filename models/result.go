@@ -1,6 +1,9 @@
 package models
 
-import "github.com/jinzhu/gorm"
+import (
+	"github.com/jinzhu/gorm"
+	"github.com/psenna/isup/dependencies"
+)
 
 // Result A Result from a system test
 type Result struct {
@@ -10,4 +13,9 @@ type Result struct {
 	StatusCode     int
 	ResponseTime   float64
 	ResponseLength int64
+}
+
+// Save Save
+func (r Result) Save() {
+	dependencies.AppDependencies.GetMainDbConection().Create(r)
 }

@@ -3,6 +3,8 @@ package models
 import (
 	"encoding/json"
 	"errors"
+
+	"github.com/psenna/isup/dependencies"
 )
 
 // Config The app config
@@ -39,4 +41,12 @@ func CreateConfig(jsonConfigs string) (Config, error) {
 // GetDatabaseConnection Get database type and url from connection
 func (c Config) GetDatabaseConnection() (databaseType string, databaseURL string) {
 	return c.DatabaseType, c.DatabaseURL
+}
+
+// ToDependenciesCOnfigurations Get dependencies configurations from model configurations
+func (c Config) ToDependenciesCOnfigurations() dependencies.Configurations {
+	return dependencies.Configurations{
+		DatabaseType: c.DatabaseType,
+		DatabaseURL:  c.DatabaseURL,
+	}
 }
