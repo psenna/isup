@@ -1,6 +1,9 @@
 package models
 
-import "time"
+import (
+	"strings"
+	"time"
+)
 
 // Test A test in a system
 type Test struct {
@@ -15,6 +18,11 @@ type Test struct {
 	Valid          bool
 }
 
+var validTests = map[string]bool{
+	"HTTP-GET":  true,
+	"HTTP-POST": true,
+}
+
 // Initiate Initiate a Test struct
 func (t *Test) Initiate(sysName string) {
 	t.System = sysName
@@ -26,11 +34,16 @@ func (t *Test) Initiate(sysName string) {
 }
 
 // Validate Validate
-func (t *Test) Validate() (problems string) {
+func (t *Test) Validate() (valid bool, problems string) {
 	t.Valid = true
 
 	if t.Name == "" {
 		problems += "A test must have a name\n"
+		t.Valid = false
+	}
+
+	if _, ok := validTests[strings.ToUpper(t.TestType)]; !ok {
+		problems += "The type " + t.TestType + " is invalid\n"
 		t.Valid = false
 	}
 
@@ -49,5 +62,15 @@ func (t *Test) Validate() (problems string) {
 		t.Valid = false
 	}
 
-	return
+	return t.Valid, problems
+}
+
+// Run Run the test
+func (t *Test) Run() Result {
+	return Result{}
+}
+
+// Run Run the test
+func (t Test) runHTTPTest() Result {
+	return Result{}
 }

@@ -10,6 +10,7 @@ type HTTPRequest struct {
 	method          string
 	headers         map[string]interface{}
 	formParams      map[string]interface{}
+	queryParams     map[string]interface{}
 	insecureRequest bool
 	timeOut         int
 }
@@ -47,6 +48,19 @@ func (h HTTPRequest) SetFormParams(formParams map[string]interface{}) HTTPReques
 
 	for index, value := range formParams {
 		h.formParams[index] = value
+	}
+
+	return h
+}
+
+// SetQueryParams Set forms values
+func (h HTTPRequest) SetQueryParams(queryParams map[string]interface{}) HTTPRequest {
+	if h.queryParams == nil {
+		h.queryParams = make(map[string]interface{})
+	}
+
+	for index, value := range queryParams {
+		h.queryParams[index] = value
 	}
 
 	return h

@@ -15,7 +15,7 @@ type Result struct {
 	ResponseLength int64
 }
 
-// Save Save
+// Save Save teh result
 func (r Result) Save() {
 	dependencies.AppDependencies.GetMainDbConection().Create(r)
 }
