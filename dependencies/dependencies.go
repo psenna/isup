@@ -21,12 +21,8 @@ func (d Dependencies) GetMainDbConection() *gorm.DB {
 // InitDependencies Init the app dependencies
 func InitDependencies(configurations Configurations) error {
 	AppDependencies = Dependencies{}
-	var err error
-	AppDependencies.configs = configurations
 
-	if err != nil {
-		return err
-	}
+	AppDependencies.configs = configurations
 
 	return nil
 }

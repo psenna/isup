@@ -1,6 +1,12 @@
 package dependencies
 
-import "net/http"
+import (
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"net/http"
+	"strings"
+)
 
 // HTTPRequest A request for a http call
 // If InsecureRequest is true the ssl certificate is not validated
@@ -99,5 +105,52 @@ func (h HTTPRequest) GetInsecureRequest() bool {
 
 // ToGoHTTPRequest Create a go http.Request from a HTTPRequest
 func (h HTTPRequest) ToGoHTTPRequest() (*http.Request, error) {
-	return http.NewRequest(h.method, h.url, nil)
+
+	body, err := json.Marshal(h.formParams)
+
+	if err != nil {
+		return nil, err
+	}
+
+	request, errReq := http.NewRequest(h.method, h.getURLWithQueryParans(), bytes.NewBuffer(body))
+
+	if errReq != nil {
+		return nil, errReq
+	}
+
+	for index, value := range h.headers {
+		request.Header.Set(index, fmt.Sprintf("%v", value))
+	}
+
+	return request, nil
+}
+
+// Return the url with query parameters
+func (h HTTPRequest) getURLWithQueryParans() (url string) {
+	url = h.url
+
+	if !strings.Contains(url, "?") {
+		url += "?"
+	}
+
+	for index, val := range h.formParams {
+		switch val.(type) {
+		case int:
+			url += fmt.Sprintf("&%s=%v", index, val)
+		case float32:
+			url += fmt.Sprintf("&%s=%v", index, val)
+		case float64:
+			url += fmt.Sprintf("&%s=%v", index, val)
+		case string:
+			url += fmt.Sprintf("&%s=%v", index, val)
+		case bool:
+			if val.(bool) {
+				url += fmt.Sprintf("&%s=true", index)
+			} else {
+				url += fmt.Sprintf("&%s=false", index)
+			}
+		}
+	}
+
+	return url
 }

@@ -65,7 +65,7 @@ func TestGetResponseMockEnable(t *testing.T) {
 func TestGetResponseFromApi(t *testing.T) {
 	HTTPClient := dependencies.HTTPClient{}
 
-	httpRequest := dependencies.GetHTTPRequest("GET", "https://google.com.br")
+	httpRequest := dependencies.GetHTTPRequest("GET", "https://github.com/")
 
 	response := HTTPClient.HTTPCall(httpRequest)
 

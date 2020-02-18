@@ -1,9 +1,10 @@
 package dependencies_test
 
 import (
+	"testing"
+
 	"github.com/psenna/isup/dependencies"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 const (
@@ -34,5 +35,31 @@ func TestGetHTTPRequestTimeOut(t *testing.T) {
 		}
 
 		assert.Equal(t, test.expectedTimeout, request.GetTimeOut())
+	}
+}
+
+func TestGetHTTPRequestHeaders(t *testing.T) {
+	var tests = []struct {
+		apiMethod       string
+		apiURL          string
+		headers         map[string]interface{}
+		expectedHeaders map[string]string
+	}{
+		{"GET", "localhost:8080/api", map[string]interface{}{"value1": 12345}, map[string]string{"value1": "12345"}},
+		{"GET", "localhost:8080/api", map[string]interface{}{"value1": "qqCoisa", "1234": true}, map[string]string{"value1": "qqCoisa", "1234": "true"}},
+		{"GET", "localhost:8080/api", map[string]interface{}{"value1": "qqCoisa", "1234": true, "asdasd": 11.6}, map[string]string{"value1": "qqCoisa", "1234": "true", "asdasd": "11.6"}},
+	}
+
+	for _, test := range tests {
+		request := dependencies.GetHTTPRequest(test.apiMethod, test.apiURL)
+
+		request = request.SetHeaders(test.headers)
+
+		requestGo, _ := request.ToGoHTTPRequest()
+
+		for index, value := range test.expectedHeaders {
+			assert.Equal(t, value, requestGo.Header.Get(index))
+		}
+
 	}
 }
