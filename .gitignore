@@ -12,5 +12,7 @@
 *.out
 isup
 config/gorm.db
+cover.out
+cover.html
 # Dependency directories (remove the comment below to include it)
 # vendor/
