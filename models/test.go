@@ -3,19 +3,23 @@ package models
 import (
 	"strings"
 	"time"
+
+	"github.com/jinzhu/gorm"
 )
 
 // Test A test in a system
 type Test struct {
+	gorm.Model
 	TestType       string                 `json:"test_type"`
 	URL            string                 `json:"url"`
 	Headers        map[string]interface{} `json:"headers"`
 	FormParameters map[string]interface{} `json:"form_parameters"`
 	Interval       int                    `json:"interval"`
 	Name           string                 `json:"name"`
-	System         string
+	System         System
+	SystemID       uint
 	LastRun        time.Time
-	Valid          bool
+	Valid          bool `gorm:"-"`
 }
 
 var validTests = map[string]bool{
@@ -33,7 +37,7 @@ func (t *Test) Initiate(sysName string) {
 	t.Validate()
 }
 
-// Validate Validate
+// Validate Validate a test
 func (t *Test) Validate() (valid bool, problems string) {
 	t.Valid = true
 

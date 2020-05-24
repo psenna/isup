@@ -1,8 +1,9 @@
 package dependencies
 
 import (
-	"github.com/jinzhu/gorm"
 	"log"
+
+	"github.com/jinzhu/gorm"
 
 	// Import portgres dialect
 	_ "github.com/jinzhu/gorm/dialects/postgres"

@@ -17,5 +17,5 @@ func TestHomeRoute(t *testing.T) {
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, 200, w.Code)
-	assert.Equal(t, "{\"message\":\"Everything is up in your life?\",\"system\":\"Is up is up!\"}\n", w.Body.String())
+	assert.Equal(t, "{\"message\":\"Everything is up in your life?\",\"system\":\"Is up is up!\"}", w.Body.String())
 }

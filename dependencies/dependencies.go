@@ -13,8 +13,8 @@ type Dependencies struct {
 	configs   Configurations
 }
 
-// GetMainDbConection Get the application database main conection
-func (d Dependencies) GetMainDbConection() *gorm.DB {
+// GetMainDbConnection Get the application database main connection
+func (d Dependencies) GetMainDbConnection() *gorm.DB {
 	return d.databases.GetMainDataseConnection()
 }
 

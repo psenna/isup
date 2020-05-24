@@ -1,12 +1,15 @@
 package models
 
+import "github.com/jinzhu/gorm"
+
 // System A system that is monitored
 type System struct {
+	gorm.Model
 	Name     string `json:"name"`
 	Group    string `json:"group"`
 	Priority uint   `json:"priority"`
 	Tests    []Test `json:"tests"`
-	Valid    bool
+	Valid    bool   `gorm:"-"`
 }
 
 // Initiate Initiate a Test struct

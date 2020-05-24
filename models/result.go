@@ -8,14 +8,16 @@ import (
 // Result A Result from a system test
 type Result struct {
 	gorm.Model
-	System         string
+	System         System
+	SystemID       uint
 	Test           string
 	StatusCode     int
 	ResponseTime   float64
 	ResponseLength int64
+	Valid          bool `gorm:"-"`
 }
 
-// Save Save teh result
+// Save Save the result
 func (r Result) Save() {
-	dependencies.AppDependencies.GetMainDbConection().Create(r)
+	dependencies.AppDependencies.GetMainDbConnection().Create(r)
 }
