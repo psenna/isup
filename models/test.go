@@ -28,8 +28,7 @@ var validTests = map[string]bool{
 }
 
 // Initiate Initiate a Test struct
-func (t *Test) Initiate(sysName string) {
-	t.System = sysName
+func (t *Test) Initiate() {
 	if t.Interval < 0 {
 		t.Interval = 60
 	}
@@ -61,7 +60,7 @@ func (t *Test) Validate() (valid bool, problems string) {
 		t.Valid = false
 	}
 
-	if t.System == "" {
+	if t.SystemID == 0 {
 		problems += "A test must have a system\n"
 		t.Valid = false
 	}

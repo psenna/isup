@@ -17,9 +17,9 @@ func TestTestIsValid(t *testing.T) {
 		{models.Test{Name: "a test"}, false, "The type  is invalid\nA test must have a type\nA test must have a url\nA test must have a system\n"},
 		{models.Test{Name: "a test", TestType: "Any"}, false, "The type Any is invalid\nA test must have a url\nA test must have a system\n"},
 		{models.Test{Name: "a test", TestType: "HTTP-GET"}, false, "A test must have a url\nA test must have a system\n"},
-		{models.Test{Name: "a test", TestType: "Any", System: "Github", URL: "http://github.com"}, false, "The type Any is invalid\n"},
-		{models.Test{Name: "a test", TestType: "HTTP-GET", System: "Github", URL: "http://github.com"}, true, ""},
-		{models.Test{Name: "a test", TestType: "HTTP-POST", System: "Github", URL: "http://github.com"}, true, ""},
+		{models.Test{Name: "a test", TestType: "Any", SystemID: 1, URL: "http://github.com"}, false, "The type Any is invalid\n"},
+		{models.Test{Name: "a test", TestType: "HTTP-GET", SystemID: 1, URL: "http://github.com"}, true, ""},
+		{models.Test{Name: "a test", TestType: "HTTP-POST", SystemID: 1, URL: "http://github.com"}, true, ""},
 	}
 
 	for _, test := range tests {
