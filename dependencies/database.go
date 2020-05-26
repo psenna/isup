@@ -12,7 +12,7 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
 
-// Database Create database conections
+// Database Create database connections
 type Database struct {
 	mainConnection *gorm.DB
 }

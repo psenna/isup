@@ -18,7 +18,7 @@ func TestConfigInitialization(t *testing.T) {
 		{"{}", models.Config{DatabaseType: "sqlite3", DatabaseURL: "./config/gorm.db"}, errors.New("At least one configured system required")},
 		{"{\"database_type\":\"postgres\"}", models.Config{DatabaseType: "postgres", DatabaseURL: "./config/gorm.db"}, errors.New("At least one configured system required")},
 		{"{\"database_url:\"localhost:6154\"}", models.Config{DatabaseType: "sqlite3", DatabaseURL: "./config/gorm.db"}, errors.New("Invalid json")},
-		{"{\"systems\":[{\"name\":\"sis1\"}]}", models.Config{DatabaseType: "sqlite3", DatabaseURL: "./config/gorm.db", Systems: []models.System{models.System{Name: "sis1"}}}, nil},
+		{"{\"systems\":[{\"name\":\"sis1\"}]}", models.Config{DatabaseType: "sqlite3", DatabaseURL: "./config/gorm.db", Systems: []models.System{{Name: "sis1"}}}, nil},
 	}
 
 	for _, test := range tests {
