@@ -1,0 +1,23 @@
+language: go
+
+go:
+    - 1.14.x
+
+dist: bionic
+
+sudo: false
+
+env:
+    global:
+      - GOPROXY=https://proxy.golang.org
+      - GO111MODULE=on
+      - GOARCH=amd64
+
+before_install:
+  - go mod download
+
+script:
+  - go test ./... -coverprofile=coverage.txt -covermode=atomic
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
